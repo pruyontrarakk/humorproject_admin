@@ -172,7 +172,7 @@ export function CaptionsPanel() {
             </button>
           </div>
         </div>
-        <div className="max-h-[420px] overflow-auto text-xs">
+        <div className="max-h-[360px] overflow-auto text-xs">
           <table className="min-w-full border-separate border-spacing-y-1 px-2">
             <thead className="sticky top-0 z-10 bg-white backdrop-blur">
               <tr className="text-[0.7rem] uppercase tracking-[0.16em] text-brand-700">

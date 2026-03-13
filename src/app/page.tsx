@@ -2,17 +2,33 @@
 
 import { useState } from "react";
 import { StatsGrid } from "@/components/StatsGrid";
-import { UsersPanel } from "@/components/UsersPanel";
+import { UsersAdminPanel } from "@/components/UsersAdminPanel";
 import { ImagesPanel } from "@/components/ImagesPanel";
 import { CaptionsPanel } from "@/components/CaptionsPanel";
+import { HumorFlavorsPanel } from "@/components/HumorFlavorsPanel";
+import { HumorFlavorMixPanel } from "@/components/HumorFlavorMixPanel";
+import { LlmAdminPanel } from "@/components/LlmAdminPanel";
+import { CaptionAdminPanel } from "@/components/CaptionAdminPanel";
+import { FlavorAdminPanel } from "@/components/FlavorAdminPanel";
+import { TermsPanel } from "@/components/TermsPanel";
 
-type TabId = "stats" | "users" | "images" | "captions";
+type TabId =
+  | "stats"
+  | "users"
+  | "images"
+  | "captions"
+  | "flavors"
+  | "llm"
+  | "terms";
 
-const tabs: { id: TabId; label: string; badge?: string }[] = [
-  { id: "stats", label: "Stats", badge: "Overview" },
-  { id: "users", label: "Users", badge: "Read" },
-  { id: "images", label: "Images", badge: "CRUD" },
-  { id: "captions", label: "Captions", badge: "Read" }
+const tabs: { id: TabId; label: string }[] = [
+  { id: "stats", label: "Stats" },
+  { id: "users", label: "Users" },
+  { id: "images", label: "Images" },
+  { id: "captions", label: "Captions" },
+  { id: "flavors", label: "Flavors" },
+  { id: "llm", label: "LLM" },
+  { id: "terms", label: "Terms" }
 ];
 
 export default function HomePage() {
@@ -35,25 +51,18 @@ export default function HomePage() {
               onClick={() => setActive(tab.id)}
             >
               <span>{tab.label}</span>
-              {tab.badge && (
-                <span
-                  className={[
-                    "rounded-full px-2 py-0.5 text-[0.65rem] uppercase tracking-[0.18em]",
-                    isActive ? "bg-brand-800 text-amber-50" : "bg-slate-100 text-slate-700"
-                  ].join(" ")}
-                >
-                  {tab.badge}
-                </span>
-              )}
             </button>
           );
         })}
       </nav>
 
       {active === "stats" && <StatsGrid />}
-      {active === "users" && <UsersPanel />}
+      {active === "users" && <UsersAdminPanel />}
       {active === "images" && <ImagesPanel />}
-      {active === "captions" && <CaptionsPanel />}
+      {active === "captions" && <CaptionAdminPanel />}
+      {active === "flavors" && <FlavorAdminPanel />}
+      {active === "llm" && <LlmAdminPanel />}
+      {active === "terms" && <TermsPanel />}
     </div>
   );
 }

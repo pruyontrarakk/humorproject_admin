@@ -1,20 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabaseClient";
 
-type Profile = {
-  id: string;
-  username?: string | null;
-  full_name?: string | null;
-  display_name?: string | null;
-  email?: string | null;
+type HumorFlavorMix = {
+  id: number | string;
+  humor_flavor_id?: number | string | null;
+  caption_count?: number | null;
   created_datetime_utc?: string | null;
 };
 
 const PAGE_SIZE = 50;
 
-export function UsersPanel() {
-  const [profiles, setProfiles] = useState<Profile[]>([]);
+export function HumorFlavorMixPanel() {
+  const [rows, setRows] = useState<HumorFlavorMix[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -27,38 +26,51 @@ export function UsersPanel() {
     async function load() {
       setLoading(true);
       setError(null);
-      const res = await fetch(
-        `/api/profiles?page=${page}&pageSize=${PAGE_SIZE}`
-      );
-      const json = await res.json();
+      const from = (page - 1) * PAGE_SIZE;
+      const to = from + PAGE_SIZE - 1;
+
+      const [countRes, dataRes] = await Promise.all([
+        supabase
+          .from("humor_flavor_mix")
+          .select("*", { count: "exact", head: true }),
+        supabase
+          .from("humor_flavor_mix")
+          .select("*")
+          .order("created_datetime_utc", { ascending: false })
+          .range(from, to)
+      ]);
 
       if (cancelled) return;
 
-      if (!res.ok) {
-        setError(json.error ?? "Failed to load profiles");
-        setProfiles([]);
+      if (countRes.error) {
+        setError(countRes.error.message);
+        setRows([]);
         setTotalCount(0);
+      } else if (dataRes.error) {
+        setError(dataRes.error.message);
+        setRows([]);
+        setTotalCount(countRes.count ?? 0);
       } else {
-        setProfiles(json.data ?? []);
-        setTotalCount(json.totalCount ?? 0);
+        setRows((dataRes.data as HumorFlavorMix[]) ?? []);
+        setTotalCount(countRes.count ?? 0);
       }
 
       setLoading(false);
     }
 
     load();
+
     return () => {
       cancelled = true;
     };
   }, [page]);
 
-  const filtered = profiles.filter(p => {
+  const filtered = rows.filter(row => {
     if (!search.trim()) return true;
     const q = search.toLowerCase();
-    return (
-      p.email?.toLowerCase().includes(q) ||
-      p.id.toLowerCase().includes(q)
-    );
+    return String(row.humor_flavor_id ?? "")
+      .toLowerCase()
+      .includes(q);
   });
 
   const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
@@ -70,13 +82,13 @@ export function UsersPanel() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-brand-700">
-            Users &amp; profiles
+            Humor flavor mix
           </h2>
         </div>
         <div className="flex items-center gap-2">
           <input
             className="input w-52 sm:w-64"
-            placeholder="Search by name, email, id…"
+            placeholder="Search by humor flavor id…"
             value={search}
             onChange={e => setSearch(e.target.value)}
           />
@@ -85,7 +97,7 @@ export function UsersPanel() {
 
       {error && (
         <div className="card border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900">
-          <p className="font-medium">Unable to load profiles.</p>
+          <p className="font-medium">Unable to load humor flavor mix.</p>
           <p className="mt-1 text-xs text-red-700/90">{error}</p>
         </div>
       )}
@@ -93,7 +105,7 @@ export function UsersPanel() {
       <div className="card overflow-hidden">
         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 bg-white px-4 py-2.5 text-xs text-slate-700">
           <span>
-            Showing {from}–{to} of {totalCount} profiles
+            Showing {from}–{to} of {totalCount} humor flavor mix rows
           </span>
           <div className="flex items-center gap-2">
             <button
@@ -121,53 +133,59 @@ export function UsersPanel() {
           <table className="min-w-full border-separate border-spacing-y-1 px-2">
             <thead className="sticky top-0 z-10 bg-white backdrop-blur">
               <tr className="text-[0.7rem] uppercase tracking-[0.16em] text-brand-700">
-                <th className="px-3 py-2 text-left">User ID</th>
-                <th className="px-3 py-2 text-left">Email</th>
-                <th className="px-3 py-2 text-left">Joined</th>
+                <th className="px-3 py-2 text-left">Humor flavor id</th>
+                <th className="px-3 py-2 text-left">Caption count</th>
+                <th className="px-3 py-2 text-left">Created</th>
+                <th className="px-3 py-2 text-left">ID</th>
               </tr>
             </thead>
             <tbody>
               {loading && (
                 <tr>
-                  <td className="px-3 py-4 text-center text-slate-500/80" colSpan={3}>
-                    Loading profiles…
+                  <td
+                    className="px-3 py-4 text-center text-slate-500/80"
+                    colSpan={5}
+                  >
+                    Loading humor flavor mix…
                   </td>
                 </tr>
               )}
               {!loading && filtered.length === 0 && (
                 <tr>
-                  <td className="px-3 py-4 text-center text-slate-500/80" colSpan={3}>
-                    No profiles on this page{search.trim() ? " match this search" : ""}.
+                  <td
+                    className="px-3 py-4 text-center text-slate-500/80"
+                    colSpan={5}
+                  >
+                    No humor flavor mix rows on this page
+                    {search.trim() ? " match this search" : ""}.
                   </td>
                 </tr>
               )}
               {!loading &&
-                filtered.map(profile => {
-                  return (
-                      <tr
-                      key={profile.id}
-                      className="transition hover:bg-brand-50"
-                    >
-                      <td className="px-3 py-2 align-top">
-                        {profile.id ? (
-                          <code className="rounded-md bg-brand-50 px-1.5 py-0.5 text-[0.7rem]">
-                            {profile.id}
-                          </code>
-                        ) : (
-                          <span className="text-slate-500/80">—</span>
-                        )}
-                      </td>
-                      <td className="px-3 py-2 align-top text-slate-800">
-                        {profile.email ?? <span className="text-slate-500/80">—</span>}
-                      </td>
-                      <td className="px-3 py-2 align-top text-slate-700">
-                        {profile.created_datetime_utc
-                          ? new Date(profile.created_datetime_utc).toLocaleString()
-                          : "—"}
-                      </td>
-                    </tr>
-                  );
-                })}
+                filtered.map(row => (
+                  <tr key={row.id} className="transition hover:bg-brand-50">
+                    <td className="px-3 py-2 align-top text-slate-700">
+                      {row.humor_flavor_id ?? (
+                        <span className="text-slate-500/80">—</span>
+                      )}
+                    </td>
+                    <td className="px-3 py-2 align-top text-slate-700">
+                      {row.caption_count ?? 0}
+                    </td>
+                    <td className="px-3 py-2 align-top text-slate-700">
+                      {row.created_datetime_utc
+                        ? new Date(
+                            row.created_datetime_utc
+                          ).toLocaleString()
+                        : "—"}
+                    </td>
+                    <td className="px-3 py-2 align-top">
+                      <code className="rounded-md bg-brand-50 px-1.5 py-0.5 text-[0.7rem]">
+                        {row.id}
+                      </code>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
@@ -175,3 +193,4 @@ export function UsersPanel() {
     </section>
   );
 }
+
