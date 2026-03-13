@@ -287,7 +287,6 @@ export function LlmOverviewPanel() {
           </div>
         </div>
       </section>
-    </div>
   );
 }
 
