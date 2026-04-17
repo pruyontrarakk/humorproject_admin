@@ -49,6 +49,10 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    /*
+     * Skip middleware for all Next internals (chunks, HMR, image optimizer, etc.),
+     * static assets, and favicon so dev never serves a redirect/HTML for JS/CSS URLs.
+     */
+    "/((?!_next/|favicon\\.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };

@@ -3,6 +3,15 @@ import { createClient } from "@/lib/supabase/server";
 
 const PAGE_SIZE = 1000;
 
+function imageRowToUrl(img: Record<string, unknown>): string | null {
+  const urlCandidate =
+    (img.url as string | undefined) ??
+    (img.image_url as string | undefined) ??
+    (img.public_url as string | undefined) ??
+    (img.src as string | undefined);
+  return typeof urlCandidate === "string" && urlCandidate.length > 0 ? urlCandidate : null;
+}
+
 export async function GET() {
   try {
     const supabase = await createClient();
@@ -86,6 +95,65 @@ export async function GET() {
       topImageCount = imgCount ?? 0;
     }
 
+    const { data: topCaptionRows, error: topCaptionsError } = await supabase
+      .from("captions")
+      .select("id, content, image_id, like_count")
+      .order("like_count", { ascending: false, nullsFirst: false })
+      .limit(3);
+
+    let topCaptionsByLikes: {
+      id: string;
+      content: string;
+      likeCount: number;
+      imageId: string | null;
+      imageUrl: string | null;
+    }[] | null = null;
+    let topCaptionsByLikesError: string | null = null;
+
+    if (topCaptionsError) {
+      topCaptionsByLikesError = topCaptionsError.message;
+    } else {
+      const rows = (topCaptionRows ?? []).map(row => {
+        const r = row as {
+          id: string;
+          content?: string | null;
+          image_id?: string | null;
+          like_count?: number | null;
+        };
+        const content = r.content?.trim() || "";
+        return {
+          id: r.id,
+          content,
+          likeCount: typeof r.like_count === "number" ? r.like_count : 0,
+          imageId: typeof r.image_id === "string" && r.image_id.length > 0 ? r.image_id : null
+        };
+      });
+
+      const imageIds = [...new Set(rows.map(r => r.imageId).filter((id): id is string => Boolean(id)))];
+      const idToUrl = new Map<string, string>();
+      if (imageIds.length > 0) {
+        const { data: imageRows, error: imagesJoinError } = await supabase
+          .from("images")
+          .select("*")
+          .in("id", imageIds);
+
+        if (!imagesJoinError && imageRows) {
+          for (const img of imageRows) {
+            const rec = img as Record<string, unknown>;
+            const id = rec.id;
+            if (typeof id !== "string" || !id.length) continue;
+            const u = imageRowToUrl(rec);
+            if (u) idToUrl.set(id, u);
+          }
+        }
+      }
+
+      topCaptionsByLikes = rows.map(r => ({
+        ...r,
+        imageUrl: r.imageId ? idToUrl.get(r.imageId) ?? null : null
+      }));
+    }
+
     return NextResponse.json({
       totalProfiles: profilesCount,
       totalImages: imagesCount,
@@ -96,7 +164,9 @@ export async function GET() {
         name: topUserName,
         captionCount: topCaptionCount ?? 0,
         imageCount: topImageCount
-      }
+      },
+      topCaptionsByLikes,
+      topCaptionsByLikesError
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Failed to fetch stats";

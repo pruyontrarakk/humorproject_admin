@@ -2,6 +2,14 @@
 
 import { useEffect, useState } from "react";
 
+type TopCaption = {
+  id: string;
+  content: string;
+  likeCount: number;
+  imageId: string | null;
+  imageUrl: string | null;
+};
+
 type Stats = {
   totalProfiles: number;
   totalImages: number;
@@ -13,6 +21,8 @@ type Stats = {
     captionCount: number;
     imageCount: number;
   };
+  topCaptionsByLikes: TopCaption[] | null;
+  topCaptionsByLikesError?: string | null;
 };
 
 export function StatsGrid() {
@@ -52,6 +62,8 @@ export function StatsGrid() {
   const avgImagesPerUser = totalUsers ? totalImages / totalUsers : 0;
   const avgCaptionsPerImage = totalImages ? totalCaptions / totalImages : 0;
   const top = stats?.mostTalkative;
+  const topByLikes = stats?.topCaptionsByLikes;
+  const topByLikesErr = stats?.topCaptionsByLikesError;
 
   return (
     <section className="space-y-4">
@@ -110,7 +122,50 @@ export function StatsGrid() {
         </div>
       </div>
 
-      {/* Additional stats (caption coverage, most talkative profile) removed per design. */}
+      <div className="space-y-3">
+        <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-700">
+          Top captions by likes
+        </h3>
+        {loading ? (
+          <p className="text-xs text-slate-500">Loading…</p>
+        ) : topByLikesErr ? (
+          <div className="card border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
+            <p className="font-medium">Could not load top captions.</p>
+            <p className="mt-1 text-xs text-amber-900/90">{topByLikesErr}</p>
+          </div>
+        ) : topByLikes && topByLikes.length > 0 ? (
+          <ol className="card divide-y divide-slate-200 overflow-hidden p-0">
+            {topByLikes.map((c, i) => (
+              <li key={c.id} className="flex gap-3 px-4 py-3 text-sm">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-100 text-xs font-semibold text-brand-800">
+                  {i + 1}
+                </span>
+                {c.imageUrl ? (
+                  <img
+                    src={c.imageUrl}
+                    alt={c.content ? c.content.slice(0, 120) : "Caption image"}
+                    className="h-20 w-32 shrink-0 rounded-xl border border-slate-200 bg-white object-cover"
+                  />
+                ) : null}
+                <div className="min-w-0 flex-1 space-y-2">
+                  <blockquote className="line-clamp-5 text-lg font-normal leading-snug text-brand-800 sm:text-xl md:text-2xl">
+                    {c.content ? (
+                      <>“{c.content}”</>
+                    ) : (
+                      <span className="text-base text-slate-400">No content</span>
+                    )}
+                  </blockquote>
+                  <p className="text-xs text-slate-500">
+                    <span className="font-medium text-emerald-700">{c.likeCount}</span> likes
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <p className="text-xs text-slate-500">No captions with likes to show yet.</p>
+        )}
+      </div>
     </section>
   );
 }
