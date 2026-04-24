@@ -158,12 +158,16 @@ export function LlmOverviewPanel() {
             </h2>
           </div>
           <div className="flex items-center gap-2">
-            <input
-              className="input w-52 sm:w-64"
-              placeholder="Filter by model, provider, or prompt…"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-            />
+            <div className="filter-input w-52 sm:w-64">
+              <svg className="h-4 w-4 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="square" strokeLinejoin="miter" strokeWidth={3} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                placeholder="FILTER RESPONSES..."
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+              />
+            </div>
           </div>
         </div>
 

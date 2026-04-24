@@ -34,13 +34,13 @@ export function AuthNav() {
 
   return (
     <div className="flex items-center gap-3">
-      <span className="text-sm text-slate-600 truncate max-w-[180px]" title={user.email ?? undefined}>
+      <span className="text-[0.65rem] font-bold uppercase tracking-widest text-black truncate max-w-[150px]" title={user.email ?? undefined}>
         {user.email}
       </span>
       <button
         type="button"
         onClick={handleSignOut}
-        className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-200"
+        className="border-2 border-black bg-black px-3 py-1 text-[0.6rem] font-black uppercase tracking-[0.2em] text-white transition hover:bg-white hover:text-black"
       >
         Sign out
       </button>

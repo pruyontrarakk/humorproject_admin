@@ -128,12 +128,16 @@ export function CaptionsPanel() {
           </h2>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <input
-            className="input w-32 sm:w-40"
-            placeholder="Filter by image id"
-            value={imageFilter}
-            onChange={e => setImageFilter(e.target.value)}
-          />
+          <div className="filter-input w-32 sm:w-48">
+            <svg className="h-4 w-4 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="square" strokeLinejoin="miter" strokeWidth={3} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+              placeholder="FILTER BY ASSET ID..."
+              value={imageFilter}
+              onChange={e => setImageFilter(e.target.value)}
+            />
+          </div>
         </div>
       </div>
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { AuthNav } from "@/components/AuthNav";
+import { GlobalNav } from "@/components/GlobalNav";
 
 export const metadata: Metadata = {
   title: "Humor Project Admin",
@@ -12,18 +13,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className="min-h-screen bg-transparent text-slate-900">
         <div className="mx-auto flex min-h-screen max-w-6xl flex-col px-4 py-6 sm:px-6 lg:px-8">
-          <header className="mb-6 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div>
-                <h1 className="text-2xl font-semibold tracking-tight text-brand-800 sm:text-3xl">
-                  Humor Project Admin
-                </h1>
-                <p className="text-sm text-slate-600">
-                  Monitor platform activity, content, and profiles in one place.
-                </p>
+          <header className="mb-8 flex items-center justify-between">
+            <div className="flex w-1/4 justify-start">
+              <GlobalNav />
+            </div>
+
+            <div className="flex flex-1 flex-col items-center text-center">
+              <h1 className="text-3xl font-black uppercase tracking-tighter text-black sm:text-5xl">
+                Humor Admin
+              </h1>
+              <div className="mt-1 bg-black px-3 py-0.5 text-[0.6rem] font-bold tracking-[0.4em] text-white">
+                INTERNAL OPERATIONAL CONSOLE
               </div>
             </div>
-            <AuthNav />
+
+            <div className="flex w-1/4 justify-end">
+              <AuthNav />
+            </div>
           </header>
           <main className="flex-1 pb-6">{children}</main>
           <footer className="mt-auto pt-4 text-xs text-slate-500">

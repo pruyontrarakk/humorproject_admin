@@ -46,7 +46,7 @@ export function ImagesPanel() {
     }
     setPreviewUrl(null);
     setSelectedFile(null);
-    setJsonText("{\n  \"url\": \"https://…\",\n  \"user_id\": \"…\"\n}");
+    setJsonText("{\n  \"url\": \"https://…\",\n  \"created_by_user_id\": \"…\"\n}");
   }
 
   async function load() {
@@ -166,7 +166,8 @@ export function ImagesPanel() {
           return;
         }
 
-        const filePath = `${Date.now()}-${selectedFile.name}`;
+        const sanitizedName = selectedFile.name.replace(/[^a-zA-Z0-9.-]/g, "_");
+        const filePath = `${Date.now()}-${sanitizedName}`;
         const { error: uploadError } = await supabase.storage
           .from(IMAGE_BUCKET)
           .upload(filePath, selectedFile, {
@@ -186,7 +187,7 @@ export function ImagesPanel() {
 
         const payload: Record<string, unknown> = {
           url: publicUrlData.publicUrl,
-          user_id: user.id
+          created_by_user_id: user.id
         };
 
         const { error } = await supabase.from("images").insert([payload]);
@@ -242,11 +243,21 @@ export function ImagesPanel() {
 
   return (
     <section className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-brand-700">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-black pb-4">
+        <div className="flex items-center gap-4">
+          <h2 className="text-xl font-black uppercase tracking-widest text-black">
             Images
           </h2>
+          <div className="flex items-center border-2 border-brand-primary bg-white px-2 py-1">
+            <svg className="h-4 w-4 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="square" strokeLinejoin="miter" strokeWidth={3} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input 
+              type="text" 
+              placeholder="SEARCH ASSETS..." 
+              className="ml-2 bg-transparent text-[0.6rem] font-black uppercase tracking-widest text-black outline-none placeholder:text-slate-300 w-32 sm:w-48"
+            />
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <button className="btn-ghost text-xs" onClick={() => load()} disabled={loading}>
@@ -277,18 +288,18 @@ export function ImagesPanel() {
                 type="button"
                 onClick={() => setPage(p => Math.max(1, p - 1))}
                 disabled={loading || page <= 1}
-                className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:pointer-events-none"
+                className="btn-ghost px-2 py-1 text-[0.65rem] font-black uppercase"
               >
                 Previous
               </button>
-              <span className="text-slate-500">
-                Page {page} of {Math.max(1, Math.ceil(totalCount / PAGE_SIZE))}
+              <span className="font-black uppercase tracking-widest text-slate-400">
+                PAGE {page} / {Math.max(1, Math.ceil(totalCount / PAGE_SIZE))}
               </span>
               <button
                 type="button"
                 onClick={() => setPage(p => Math.min(Math.ceil(totalCount / PAGE_SIZE), p + 1))}
                 disabled={loading || page >= Math.ceil(totalCount / PAGE_SIZE)}
-                className="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:pointer-events-none"
+                className="btn-ghost px-2 py-1 text-[0.65rem] font-black uppercase"
               >
                 Next
               </button>
@@ -458,7 +469,7 @@ function ImagePreview({ row }: { row: ImageRow }) {
     (anyRow.src as string | undefined);
 
   if (!url) {
-    return <span className="text-slate-500/80">No image URL</span>;
+    return <span className="text-slate-500/80 uppercase font-bold text-[0.6rem]">No image URL</span>;
   }
 
   return (
@@ -466,15 +477,15 @@ function ImagePreview({ row }: { row: ImageRow }) {
       <img
         src={url}
         alt="Image"
-        className="h-24 w-40 rounded-xl border border-slate-200 bg-slate-100 object-cover"
+        className="h-24 w-40 border-2 border-black bg-slate-100 object-cover"
       />
       <a
         href={url}
         target="_blank"
         rel="noreferrer"
-        className="text-[0.7rem] font-medium text-sky-700 hover:text-sky-900"
+        className="border-2 border-black bg-white px-3 py-1 text-[0.65rem] font-black uppercase tracking-widest text-black hover:bg-black hover:text-white transition"
       >
-        Open
+        VIEW
       </a>
     </div>
   );

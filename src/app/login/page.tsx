@@ -42,38 +42,44 @@ function LoginPageContent() {
 
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center px-4">
-      <div className="w-full max-w-md space-y-6 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-        <div className="text-center space-y-1">
-          <h2 className="text-2xl font-semibold tracking-tight text-brand-800">
-            Admin sign in
+      <div className="w-full max-w-md space-y-8 border-4 border-black bg-white p-10">
+        <div className="text-center space-y-4">
+          <h2 className="text-4xl font-black uppercase tracking-tighter text-black">
+            Authorization Required
           </h2>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-700">
-            Superadmin access only
-          </p>
-          <p className="mt-2 text-sm text-slate-600">
-            Use your work Google account to access the Humor Project admin dashboard.
-            Only profiles marked as superadmins in the system are allowed to sign in.
+          <div className="mx-auto h-1 w-12 bg-brand-primary" />
+          <p className="text-[0.65rem] font-bold uppercase tracking-[0.3em] text-slate-400">
+            SECURE ACCESS GATEWAY
           </p>
         </div>
 
-        {error === "auth" && (
-          <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
-            Sign-in failed. Please try again.
+        <div className="space-y-4 text-xs font-bold leading-relaxed text-black">
+          <p>
+            This portal is restricted to authorized administrative personnel only. Use your internal Google account to verify superadmin status.
           </p>
+
+        </div>
+
+        {error === "auth" && (
+          <div className="border-4 border-brand-primary bg-brand-primary p-3 text-white">
+            <p className="text-[0.6rem] font-black uppercase tracking-widest">ERROR: AUTH_FAILURE</p>
+            <p className="text-xs opacity-90 mt-1">Please try again or contact system support.</p>
+          </div>
         )}
         {error === "unauthorized" && (
-          <p className="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
-            You don’t have permission to access the admin area. Only superadmins can sign in.
-          </p>
+          <div className="border-4 border-brand-primary bg-brand-primary p-3 text-white">
+            <p className="text-[0.6rem] font-black uppercase tracking-widest">ERROR: ACCESS_DENIED</p>
+            <p className="text-xs opacity-90 mt-1">Your profile lacks the required superadmin privileges.</p>
+          </div>
         )}
 
         <button
           type="button"
           onClick={handleSignIn}
           disabled={loading}
-          className="btn-primary flex w-full items-center justify-center gap-2 text-sm"
+          className="btn-primary w-full py-4 text-sm font-black uppercase tracking-[0.2em]"
         >
-          {loading ? "Redirecting…" : "Sign in with Google"}
+          {loading ? "ESTABLISHING SESSION..." : "INITIATE GOOGLE AUTH"}
         </button>
       </div>
     </div>
