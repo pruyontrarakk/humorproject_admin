@@ -1,0 +1,63 @@
+
+> humorproject_admin@0.1.0 build
+> next build
+
+  ▲ Next.js 14.2.35
+  - Environments: .env.local
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/8) ...
+   Generating static pages (2/8) 
+ ⨯ useSearchParams() should be wrapped in a suspense boundary at page "/404". Read more: https://nextjs.org/docs/messages/missing-suspense-with-csr-bailout
+    at s (/Users/pruyontrarak/Downloads/humorproject_admin/.next/server/chunks/246.js:59:13094)
+    at c (/Users/pruyontrarak/Downloads/humorproject_admin/.next/server/chunks/246.js:59:23939)
+    at o (/Users/pruyontrarak/Downloads/humorproject_admin/.next/server/app/_not-found/page.js:1:2963)
+    at nj (/Users/pruyontrarak/Downloads/humorproject_admin/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:46252)
+    at nM (/Users/pruyontrarak/Downloads/humorproject_admin/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47572)
+    at nM (/Users/pruyontrarak/Downloads/humorproject_admin/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:61547)
+    at nL (/Users/pruyontrarak/Downloads/humorproject_admin/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:64547)
+    at nB (/Users/pruyontrarak/Downloads/humorproject_admin/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:67539)
+    at nM (/Users/pruyontrarak/Downloads/humorproject_admin/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:58561)
+    at nL (/Users/pruyontrarak/Downloads/humorproject_admin/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:64547)
+
+Error occurred prerendering page "/_not-found". Read more: https://nextjs.org/docs/messages/prerender-error
+
+   Generating static pages (4/8) 
+ ⨯ useSearchParams() should be wrapped in a suspense boundary at page "/login". Read more: https://nextjs.org/docs/messages/missing-suspense-with-csr-bailout
+    at s (/Users/pruyontrarak/Downloads/humorproject_admin/.next/server/chunks/246.js:59:13094)
+    at c (/Users/pruyontrarak/Downloads/humorproject_admin/.next/server/chunks/246.js:59:23939)
+    at l (/Users/pruyontrarak/Downloads/humorproject_admin/.next/server/app/login/page.js:1:5334)
+    at nj (/Users/pruyontrarak/Downloads/humorproject_admin/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:46252)
+    at nM (/Users/pruyontrarak/Downloads/humorproject_admin/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47572)
+    at nM (/Users/pruyontrarak/Downloads/humorproject_admin/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:61547)
+    at nL (/Users/pruyontrarak/Downloads/humorproject_admin/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:64547)
+    at nB (/Users/pruyontrarak/Downloads/humorproject_admin/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:67539)
+    at nM (/Users/pruyontrarak/Downloads/humorproject_admin/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:58561)
+    at nL (/Users/pruyontrarak/Downloads/humorproject_admin/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:64547)
+
+Error occurred prerendering page "/login". Read more: https://nextjs.org/docs/messages/prerender-error
+
+   Generating static pages (6/8) 
+ ⨯ useSearchParams() should be wrapped in a suspense boundary at page "/". Read more: https://nextjs.org/docs/messages/missing-suspense-with-csr-bailout
+    at s (/Users/pruyontrarak/Downloads/humorproject_admin/.next/server/chunks/246.js:59:13094)
+    at c (/Users/pruyontrarak/Downloads/humorproject_admin/.next/server/chunks/246.js:59:23939)
+    at n (/Users/pruyontrarak/Downloads/humorproject_admin/.next/server/app/page.js:1:92690)
+    at nj (/Users/pruyontrarak/Downloads/humorproject_admin/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:46252)
+    at nM (/Users/pruyontrarak/Downloads/humorproject_admin/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:47572)
+    at nM (/Users/pruyontrarak/Downloads/humorproject_admin/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:61547)
+    at nL (/Users/pruyontrarak/Downloads/humorproject_admin/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:64547)
+    at nB (/Users/pruyontrarak/Downloads/humorproject_admin/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:67539)
+    at nM (/Users/pruyontrarak/Downloads/humorproject_admin/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:58561)
+    at nL (/Users/pruyontrarak/Downloads/humorproject_admin/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:64547)
+
+Error occurred prerendering page "/". Read more: https://nextjs.org/docs/messages/prerender-error
+
+ ✓ Generating static pages (8/8)
+
+> Export encountered errors on following paths:
+	/_not-found/page: /_not-found
+	/login/page: /login
+	/page: /

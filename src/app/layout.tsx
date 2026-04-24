@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import "./globals.css";
 import { AuthNav } from "@/components/AuthNav";
 import { GlobalNav } from "@/components/GlobalNav";
@@ -15,7 +16,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div className="mx-auto flex min-h-screen max-w-6xl flex-col px-4 py-6 sm:px-6 lg:px-8">
           <header className="mb-8 flex items-center justify-between">
             <div className="flex w-1/4 justify-start">
-              <GlobalNav />
+              <Suspense fallback={null}>
+                <GlobalNav />
+              </Suspense>
             </div>
 
             <div className="flex flex-1 flex-col items-center text-center">
